@@ -1,0 +1,49 @@
+SELECT
+	tu.cUserName as username ,
+	tu.mobile as phone,
+	tr.cDspName as userrole
+	tc.cCustomerName as customername,
+	td.DeptName as department,
+  tu.memo as remark  
+FROM
+	t_user tu
+	INNER JOIN t_userrole tr ON tu.iPopedom = tr.iPopedom
+	INNER JOIN t_customer tc ON tu.iCustomerID = tc.iCustomerID
+	INNER JOIN t_dept td ON td.iDeptID = tu.iDeptID
+	WHERE tu.cUserName='kf'
+
+
+查询用户用户信息
+
+  SELECT
+    tu.cUserName as username ,
+    tu.mobile as phone,
+    tr.cDspName as userrole,
+    tc.cCustomerName as customername,
+    td.DeptName as department,
+    tu.memo as remark
+    FROM
+    t_user tu
+    INNER JOIN t_userrole tr ON tu.iPopedom = tr.iPopedom
+    INNER JOIN t_customer tc ON tu.iCustomerID = tc.iCustomerID
+    INNER JOIN t_dept td ON td.iDeptID = tu.iDeptID
+    WHERE 1=1
+    <if test="cusername!=null">
+     and tu.cUserName=#{cusername,jdbcType=VARCHAR}</if>   
+
+删除所有客户信息
+
+
+delete from t_user
+    where ID = 31
+
+
+
+
+<客户查询>
+
+SELECT * from t_customer
+
+<部门查询>
+
+SELECT * from t_dept
