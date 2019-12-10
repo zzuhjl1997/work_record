@@ -47,3 +47,17 @@ SELECT * from t_customer
 <部门查询>
 
 SELECT * from t_dept
+
+
+<操作日志查询>
+
+SELECT
+	tu.cUserName AS userName,
+	top.operationDate AS operationdate
+	top.tAction AS taction,
+	top.tUrl AS turl,
+	top.`status` AS `status` 
+FROM
+	t_operation_log top
+	INNER JOIN t_user tu ON top.operationUserID = tu.iUserID
+
