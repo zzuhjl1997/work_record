@@ -61,3 +61,31 @@ FROM
 	t_operation_log top
 	INNER JOIN t_user tu ON top.operationUserID = tu.iUserID
 
+
+--------------------------------------------------------------------------------------------
+SELECT
+	tu.cUserName AS userName,
+	top.operationDate AS operationdate,
+	top.tAction AS taction,
+	top.tUrl AS turl,
+	top.`status` AS `status` 
+FROM
+	t_operation_log top
+	INNER JOIN t_user tu ON top.operationUserID = tu.iUserID
+
+
+------------------------------------------------------------------------------------------------
+查询日志记录
+SELECT
+	tu.cUserName AS username,
+	top.operationDate AS operationdate,
+	top.tUrlName AS turlname,
+	top.`status` AS `status` 
+FROM
+	t_operation_log top
+	INNER JOIN t_user tu ON tu.iUserID = top.operationUserID 
+WHERE
+	1 = 1 
+	AND top.operationDate BETWEEN '2019-12-11 16:31:30' 
+	AND '2019-12-11 16:31:35' 
+	AND tu.cUserName = 'erw'
