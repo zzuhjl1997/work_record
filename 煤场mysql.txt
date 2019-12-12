@@ -103,3 +103,6 @@ FROM
 	INNER JOIN t_customer tc ON td.customer = tc.iCustomerID 
 WHERE
 	td.id =3
+
+
+实时数据
