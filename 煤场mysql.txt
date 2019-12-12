@@ -104,5 +104,49 @@ FROM
 WHERE
 	td.id =3
 
+查询最新温度
+SELECT
+	dCollectDT,fT 
+FROM
+	t_temperature 
+WHERE
+                1=1
+	AND devID = 3 
+ORDER BY
+	dCollectDT DESC 
+	LIMIT 1
 
-实时数据
+
+查询一小时或是一天内的温度曲线
+
+SELECT
+	dCollectDT,
+	fT 
+FROM
+	t_temperature
+WHERE
+	1 = 1 
+	AND devID = 3 
+	AND dCollectDT BETWEEN '2019-12-11 00:00:05' AND '2019-12-12 23:00:05'
+
+
+查询历史温度曲线
+SELECT
+	dCollectDT,
+	fT 
+FROM
+	t_temperature_history 
+WHERE
+	1 = 1 
+	AND devID = 3 
+	AND dCollectDT BETWEEN '2019-12-11 00:00:05' AND '2019-12-12 23:00:05'
+
+查询预警温度
+SELECT
+	cParam,
+	cValue 
+FROM
+	t_parameter 
+WHERE
+	cParam = 'T' 
+	AND iCustomerID = 2
