@@ -130,6 +130,9 @@ WHERE
 	AND dCollectDT BETWEEN '2019-12-11 00:00:05' AND '2019-12-12 23:00:05'
 
 
+
+
+
 查询历史温度曲线
 SELECT
 	dCollectDT,
@@ -141,12 +144,100 @@ WHERE
 	AND devID = 3 
 	AND dCollectDT BETWEEN '2019-12-11 00:00:05' AND '2019-12-12 23:00:05'
 
-查询预警温度
+查询预警参数 ---温度等
 SELECT
 	cParam,
 	cValue 
 FROM
 	t_parameter 
 WHERE
-	cParam = 'T' 
+	1 = 1 
 	AND iCustomerID = 2
+
+查询最新的气体数据
+SELECT
+	* 
+FROM
+	t_gas 
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+ORDER BY
+	dCollectDT DESC 
+	LIMIT 1
+
+-------------------------------
+查询一日内气体曲线
+SELECT
+	*
+FROM
+	t_gas_history
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+	AND dCollectDT BETWEEN '2019-12-12 00:00:05' AND '2019-12-13 23:00:05'
+----------------------------------------------------------------------------------------------------------
+获取最近一小时的温度  并进行昨天今天同比
+
+SELECT
+	dCollectDT,fT,dev_id 
+FROM
+	t_temperature_history 
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+	AND dCollectDT BETWEEN '2019-12-11 00:34:41' 
+	AND '2019-12-12 23:34:41' 
+GROUP BY
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:%i' ) 
+ORDER BY
+	id ASC 
+	LIMIT 3000
+
+
+
+
+SELECT
+	dCollectDT,fT,dev_id 
+FROM
+	t_temperature_history 
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+	AND dCollectDT BETWEEN '2019-12-11 00:34:41' 
+	AND '2019-12-12 23:34:41' 
+GROUP BY
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:%i' ) 
+ORDER BY
+	id ASC 
+	LIMIT 3000
+	
+	
+	
+	
+	
+	
+	
+	
+	
+SELECT
+	iAddressNo,
+	iGroupIndex,
+	dCollectDT,
+	avg( fTa ) AS fTa,
+	avg( fTb ) AS fTb,
+	avg( fTc ) AS fTc,
+	avg( fT1 ) AS fT1,
+	fLeftI 
+FROM
+	t_uilefti 
+WHERE
+	1 = 1 
+	AND iDeviceId = ? 
+	AND dCollectDT BETWEEN ? 
+	AND ? 
+GROUP BY
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:%i' ) 
+ORDER BY
+	id ASC 
+	LIMIT 3000
