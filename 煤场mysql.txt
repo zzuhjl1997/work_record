@@ -177,7 +177,7 @@ WHERE
 	AND dev_id = 3 
 	AND dCollectDT BETWEEN '2019-12-12 00:00:05' AND '2019-12-13 23:00:05'
 ----------------------------------------------------------------------------------------------------------
-获取最近一小时的温度  并进行昨天今天同比
+获取最近一小时的温度  
 
 SELECT
 	dCollectDT,fT,dev_id 
@@ -188,11 +188,9 @@ WHERE
 	AND dev_id = 3 
 	AND dCollectDT BETWEEN '2019-12-11 00:34:41' 
 	AND '2019-12-12 23:34:41' 
-GROUP BY
-	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:%i' ) 
 ORDER BY
 	id ASC 
-	LIMIT 3000
+	LIMIT 15
 
 
 
@@ -241,3 +239,10 @@ GROUP BY
 ORDER BY
 	id ASC 
 	LIMIT 3000
+
+
+
+-------------查询一天的数据
+
+
+
