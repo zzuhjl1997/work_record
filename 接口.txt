@@ -5,3 +5,9 @@ http://localhost:8888/temperature/monitorFt?devid=3&dcollectstart=2019-12-12 00:
 http://localhost:8888/temperature/newFt?devid=3&dcollectstart=2019-12-12 00:31:30&dcollectend=2019-12-12 23:31:35
 http://localhost:8888/temperature/historyFt?devid=3&dcollectstart=2019-12-12 00:31:30&dcollectend=2019-12-12 23:31:35
 
+cusername ；用户名；String
+icustomerid ;客户ID；int
+mobile ;电话；String
+ipopedom  ；角色；int
+memo;备注；String 
+ideptid;部门；int

@@ -105,17 +105,14 @@ WHERE
 	td.id =3
 
 查询最新温度
-SELECT
-	dCollectDT,fT 
-FROM
-	t_temperature 
-WHERE
-                1=1
-	AND devID = 3 
-ORDER BY
-	dCollectDT DESC 
-	LIMIT 1
-
+ select
+        dCollectDT,fT,dev_id
+        from t_temperature
+        where 1=1
+        <if test="devid!=null">
+            AND dev_id = #{devid,jdbcType=INTEGER}
+        </if>
+        order by dCollectDT limit 1
 
 查询一小时或是一天内的温度曲线
 
@@ -169,80 +166,20 @@ ORDER BY
 -------------------------------
 查询一日内气体曲线
 SELECT
-	*
-FROM
-	t_gas_history
-WHERE
-	1 = 1 
-	AND dev_id = 3 
-	AND dCollectDT BETWEEN '2019-12-12 00:00:05' AND '2019-12-13 23:00:05'
-----------------------------------------------------------------------------------------------------------
-获取最近一小时的温度  
-
-SELECT
-	dCollectDT,fT,dev_id 
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:00:00' ) as dCollectDT,
+	AVG( fT ) AS fT,
+	dev_id AS devid 
 FROM
 	t_temperature_history 
 WHERE
 	1 = 1 
 	AND dev_id = 3 
-	AND dCollectDT BETWEEN '2019-12-11 00:34:41' 
-	AND '2019-12-12 23:34:41' 
-ORDER BY
-	id ASC 
-	LIMIT 15
-
-
-
-
-SELECT
-	dCollectDT,fT,dev_id 
-FROM
-	t_temperature_history 
-WHERE
-	1 = 1 
-	AND dev_id = 3 
-	AND dCollectDT BETWEEN '2019-12-11 00:34:41' 
-	AND '2019-12-12 23:34:41' 
+	AND dCollectDT BETWEEN '2019-12-17 00:00:00' 
+	AND '2019-12-17 23:59:59' 
 GROUP BY
-	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:%i' ) 
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H' ) 
 ORDER BY
 	id ASC 
-	LIMIT 3000
-	
-	
-	
-	
-	
-	
-	
-	
-	
-SELECT
-	iAddressNo,
-	iGroupIndex,
-	dCollectDT,
-	avg( fTa ) AS fTa,
-	avg( fTb ) AS fTb,
-	avg( fTc ) AS fTc,
-	avg( fT1 ) AS fT1,
-	fLeftI 
-FROM
-	t_uilefti 
-WHERE
-	1 = 1 
-	AND iDeviceId = ? 
-	AND dCollectDT BETWEEN ? 
-	AND ? 
-GROUP BY
-	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:%i' ) 
-ORDER BY
-	id ASC 
-	LIMIT 3000
 
-
-
--------------查询一天的数据
-
-
-
+查询所有设备温度
+待定
