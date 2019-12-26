@@ -23,4 +23,27 @@
 
 
 
+考研花费7天   60%考上几率   实在不行调剂
+
+
+
+2019-12-25
+
+实时监测温度列表
+SELECT
+	tdt.`name` AS typename,
+	td.`name` AS NAME,
+	td.ip AS ip,
+	td.`status` AS `status`,
+	tt.fT AS ft 
+FROM
+	t_dev td
+	INNER JOIN t_dev_type tdt ON td.type = tdt.id
+	INNER JOIN t_temperature tt ON td.id = tt.dev_id 
+WHERE
+	td.`status` = 0 
+	AND td.`name` LIKE '%温度探测器%'
+
+
+
 

@@ -164,7 +164,7 @@ ORDER BY
 	LIMIT 1
 
 -------------------------------
-查询一日内气体曲线
+查询一日内温度曲线
 SELECT
 	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:00:00' ) as dCollectDT,
 	AVG( fT ) AS fT,
@@ -181,5 +181,190 @@ GROUP BY
 ORDER BY
 	id ASC 
 
-查询所有设备温度
+
+
+查询一日内气体曲线
+
+
+
+
+
+
+查询所有设备可燃气体
 待定
+
+SELECT
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:00:00' ) as dCollectDT,
+	AVG( gCH4 ) AS gCH4,
+	AVG( gCO ) AS gCO,
+	AVG( gO2 ) AS gO2,
+	dev_id AS devid 
+FROM
+	t_gas_history 
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+	AND dCollectDT BETWEEN '2019-12-17 00:00:00' 
+	AND '2019-12-17 23:59:59' 
+GROUP BY
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H' ) 
+ORDER BY
+	id ASC 
+
+
+
+
+
+获取最新粉尘数据
+SELECT
+	* 
+FROM
+	t_dust 
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+ORDER BY
+	dCollectDT DESC 
+	LIMIT 1
+
+
+一天粉尘数据
+
+
+SELECT
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:00:00' ) as dCollectDT,
+	fDust AS fdust,
+	dev_id AS devid 
+FROM
+	t_dust_history
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+	AND dCollectDT BETWEEN '2019-12-17 00:00:00' 
+	AND '2019-12-17 23:59:59' 
+GROUP BY
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H' ) 
+ORDER BY
+	id ASC 
+
+
+
+
+SELECT
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H:00:00' ) as dCollectDT,
+	fDust AS fdust,
+	dev_id AS devid 
+FROM
+	t_dust_history
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+	AND dCollectDT BETWEEN '2019-12-17 00:00:00' 
+	AND '2019-12-17 23:59:59' 
+GROUP BY
+	DATE_FORMAT( dCollectDT, '%Y-%m-%d %H' ) 
+ORDER BY
+	id ASC 
+	
+SELECT
+	dCollectDT,
+	fDust AS fdust,
+	dev_id AS devid 
+FROM
+	t_dust_history 
+WHERE
+	1 = 1 
+	AND dev_id = 3
+	ORDER BY dCollectDT DESC 
+	LIMIT 1
+
+
+
+获取最新水压水流信息
+
+SELECT
+	* 
+FROM
+	t_press_flow
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+ORDER BY
+	dCollectDT DESC 
+	LIMIT 1
+-------温度检测列表-----
+               SELECT DISTINCT
+	* 
+FROM
+	(
+	SELECT
+		tdt.`name` AS typename,
+		td.`name` AS NAME,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		tt.fT AS ft 
+	FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_temperature tt ON td.id = tt.dev_id 
+	WHERE
+		td.`status` = 0 
+		AND td.`name` LIKE '%温度探测器%' 
+	) a
+
+
+-----查询气体设备监控列表------
+SELECT DISTINCT
+	* 
+FROM
+	(
+	SELECT
+		tdt.`name` AS typename,
+		td.`name` AS devname,
+		td.site AS site,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		td.update_time AS updatetime,
+		tg.gCH4 AS gch4,
+		tg.gCO AS gCO,
+		tg.gO2 AS gO2 
+	FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_gas tg ON td.id = tg.dev_id 
+	WHERE
+		td.type = 3 
+	) a
+	
+
+
+-----查询烟尘检测列表----
+SELECT DISTINCT
+	* 
+FROM
+	(
+	SELECT
+		tdt.`name` AS typename,
+		td.`name` AS NAME,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		tdu.fDust AS fDust
+		FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_dust tdu ON td.id = tdu.dev_id 
+	WHERE
+		td.`status` = 0 
+	AND td.`name` LIKE '%探测器%' 
+	) a
+
+
+获取水压监控列表
+
+
+
+
+
+
+
+
