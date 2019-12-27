@@ -361,9 +361,29 @@ FROM
 
 获取水压监控列表
 
+-----获取最新水流数据--
 
 
+<include refid="Base_Column_List" />
 
+
+SELECT
+	* 
+FROM
+	t_flow
+WHERE
+	1 = 1 
+	AND dev_id = 3 
+ORDER BY
+	dCollectDT DESC 
+	LIMIT 3
+-----根据消防栓ID查找设备ID
+SELECT
+	* 
+FROM
+	t_hydrantid_relation 
+WHERE
+	hydrantid =1
 
 
 
