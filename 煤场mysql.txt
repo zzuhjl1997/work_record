@@ -386,5 +386,168 @@ WHERE
 	hydrantid =1
 
 
+-----查询消防炮列表----
+SELECT
+		tdt.`name` AS typename,
+		td.`name` AS NAME,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		td.site
+		FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_alarm ta ON td.ID=ta.dev_id
+	WHERE 1=1
+	  AND tdt.id=8
+		AND td.`status` = 0 
+		AND td.is_auto=1
+	  AND td.`name` LIKE '%消防炮%' 
+-------查询消防炮报警状态-----
+
+SELECT
+	id,
+	dev_id AS devid,
+	alarm_time,
+	deal_time 
+FROM
+	t_alarm 
+WHERE
+	dev_id = 8 
+	AND alarm_time BETWEEN '2019-12-27 09:20:00' 
+	AND '2019-12-27 09:25:00' 
+	AND deal_time NOT BETWEEN '2019-12-27 09:20:00' 
+	AND '2019-12-27 09:25:00' 
+ORDER BY
+	alarm_time 
+	LIMIT 1
+
+
+ SELECT
+	id,
+	dev_id AS devId,
+	alarm_time,
+	deal_time
+    FROM
+	t_alarm
+    WHERE
+	dev_id = {devid}
+	AND alarm_time BETWEEN #{dcollectstart,jdbcType=TIMESTAMP}
+	AND #{dcollectend,jdbcType=TIMESTAMP}
+	AND deal_time NOT BETWEEN #{dcollectstart,jdbcType=TIMESTAMP}
+	AND #{dcollectend,jdbcType=TIMESTAMP}
+    ORDER BY
+	alarm_time
+	LIMIT 1
+如果count>1
+
+
+<select id="selectFireByCondition" resultType="com.plat.acoal.model.DevInfo" parameterType="com.plat.acoal.entity.Dev">
+    SELECT
+		tdt.`name` AS typename,
+		td.`name` AS NAME,
+		td.id AS id,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		td.site
+		FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_alarm ta ON td.ID=ta.dev_id
+	WHERE 1=1
+	    AND tdt.id=8
+        <if test="status!=null">AND td.`status` = #{status,jdbcType=INTEGER}</if>
+        <if test="name!=null">AND td.`name` LIKE "%"#{name,jdbcType=VARCHAR}"%"</if>
+    </select>
+
+
+
+
+
+
+实时监控消防炮
+SELECT
+		td.is_auto AS is_auto，
+		td.`status` AS `status`
+		FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_alarm ta ON td.ID=ta.dev_id
+	WHERE 1=1
+	  AND tdt.id=8
+		AND td.`status` = 0 
+		AND td.is_auto=1
+	  AND td.`name` LIKE '%消防炮%' 
+
+
+
+SELECT
+		tdt.`name` AS typename,
+		td.`name` AS NAME,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		td.site
+		FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_alarm ta ON td.ID=ta.dev_id
+	WHERE 1=1
+	  AND tdt.id=8
+		AND td.`status` = 0 
+		AND td.is_auto=1
+	  AND td.`name` LIKE '%消防炮%' 
+
+
+
+
+SELECT
+	id,
+	dev_id AS devId,
+	alarm_time,
+	deal_time 
+FROM
+	t_alarm 
+WHERE
+	dev_id = 8 
+	AND alarm_time BETWEEN '2019-12-27 09:20:00' 
+	AND '2019-12-27 09:25:00' 
+	AND deal_time NOT BETWEEN '2019-12-27 09:20:00' 
+	AND '2019-12-27 09:25:00' 
+ORDER BY
+	alarm_time 
+	LIMIT 1
+
+
+SELECT
+		id,is_auto,
+		status
+		FROM
+		t_dev td
+	WHERE 1=1
+	  AND type=8
+		AND status = 0 
+		AND is_auto=1
+	  AND name LIKE '%消防炮%' 
+		
+		
+		SELECT
+		id,is_auto,
+		status
+		FROM
+		t_dev
+	 WHERE 1=1
+	  AND type=8
+
+
+
+
+=====查询设备数===
+	
+SELECT
+	COUNT( * ) 
+FROM
+	t_dev 
+WHERE
+	type =3
+
 
 
