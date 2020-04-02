@@ -11,3 +11,40 @@ mobile ;电话；String
 ipopedom  ；角色；int
 memo;备注；String 
 ideptid;部门；int
+
+
+
+
+
+
+
+
+
+用户登陆
+
+
+username ；用户名；String 
+password；用户密码；String
+
+
+
+
+status:状态码；200为成功 300为失败
+msg:状态信息
+
+
+最新温度：
+dcollectdt: 收集时间
+devid: 设备id
+ft: 温度值
+
+
+
+  count: 序号,
+  fT: 温度值,
+  ip: IP地址,
+  name: 设备名,
+  site: 设备地址,
+  status: 设备状态,
+  typename: 设备类型名,
+  lastTime: 更新时间

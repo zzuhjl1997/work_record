@@ -310,8 +310,30 @@ FROM
 	WHERE
 		td.`status` = 0 
 		AND td.`name` LIKE '%温度探测器%' 
+AND icustomerid=2
 	) a
 
+SELECT DISTINCT
+        *
+        FROM
+        (
+        SELECT
+        tdt.`name` AS typename,
+        td.`name` AS NAME,
+        td.site AS site,
+        td.update_time as updateTime,
+        td.ip AS ip,
+        td.`status` AS `status`,
+        tt.fT AS ft
+        FROM
+        t_dev td
+        INNER JOIN t_dev_type tdt ON td.type = tdt.id
+        INNER JOIN t_temperature tt ON td.id = tt.dev_id
+        WHERE 1=1
+        <if test="icustomerid!=null">AND td.`icustomerid` = #{icustomerid,jdbcType=INTEGER}</if>
+        <if test="status!=null">AND td.`status` = #{status,jdbcType=INTEGER}</if>
+        <if test="name!=null">AND td.`name` LIKE "%"#{name,jdbcType=VARCHAR}"%"</if>
+        ) a
 
 -----查询气体设备监控列表------
 SELECT DISTINCT
@@ -338,6 +360,9 @@ FROM
 	
 
 
+
+
+
 -----查询烟尘检测列表----
 SELECT DISTINCT
 	* 
@@ -357,7 +382,23 @@ FROM
 		td.`status` = 0 
 	AND td.`name` LIKE '%探测器%' 
 	) a
-
+SELECT DISTINCT
+	* 
+FROM
+	(
+	SELECT
+		tdt.`name` AS typename,
+		td.`name` AS NAME,
+		td.site AS site,
+		td.update_time AS updateTime,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		tdu.fDust as tdust
+	FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+	  INNER JOIN t_dust tdu ON td.id = tdu.dev_id  
+	) a
 
 获取水压监控列表
 
@@ -550,4 +591,230 @@ WHERE
 	type =3
 
 
+-------增加监测点树结构------
 
+先查出所有的region  然后按照region查询dev
+ SELECT
+        `d`.id AS `devId`,
+        `d`.status AS `devStatus`,
+        `d`.`name` AS `devName`,
+        `d`.code AS `devCode`,
+        `dt`.id AS `devTypeId`,
+        `dt`.`name` AS `devTypeName`,
+        `d`.ser_num AS `devSerNum`,
+        `r`.id AS `regionId`,
+        `r`.`name` AS `regionName`,
+        `d`.site AS `devSite`,
+        `d`.remark AS `devRemark`
+        FROM
+        (SELECT * from t_dev WHERE 1 = 1
+        <if test="customerId != null">
+            AND t_dev.iCustomerID = #{customerId,jdbcType=INTEGER}
+        </if>
+        <if test="devTypeId != null">
+            AND t_dev.type = #{devTypeId,jdbcType=INTEGER}
+        </if>
+        <if test="devName != null">
+            AND t_dev.name LIKE '%' #{devName,jdbcType=VARCHAR} '%'
+        </if>
+        <if test="regionId != null">
+            AND t_dev.id = #{regionId,jdbcType=INTEGER}
+        </if>
+        )AS `d`
+        INNER JOIN t_dev_type AS `dt` ON `d`.type = `dt`.id
+        INNER JOIN t_region AS `r` ON `d`.region = `r`.id
+
+查询对应dev
+
+
+
+
+
+
+
+ SELECT
+        id,
+        name,
+        region
+        FROM
+	    t_dev
+        WHERE 1=1
+        <if test="region != null">AND region = #{region}</if>
+        <if test="icustomerid != null">AND iCustomerID = #{icustomerid}</if>
+
+
+
+--------------------------------------------------------------------------------------
+查询风机 应该是 设备的基础参数--
+SELECT
+	id,
+	name,
+	power,
+	site ,
+	`status`,
+	is_auto
+FROM
+	t_dev
+	WHERE
+	type=9
+-----------------------------------------------------------------------------------------
+计算六种设备的在线率
+/**
+     * 获取设备在线率  首页》》设备在线率
+     * 思路：查询每个种类设备的总数
+     * 设置status的值为1时的在线设备总数
+     * 在线/总设备=设备在线率
+     * List(Map<String,Integer>)
+     */
+
+
+可不可以一次求出所有的   不可    需要一一对比计算
+
+
+
+
+---查询大屏实时数据---co-
+
+SELECT
+	td.`name` as name,
+	trco.gCO as gco,
+	td.`status` as `status` 
+FROM
+	`t_realco` trco
+	INNER JOIN t_dev td 
+WHERE
+	1 = 1 
+	AND td.type =9
+
+==查询某区域实时水压=====
+
+SELECT
+	AVG(trp.tpressure )as tpressure,
+	td.`name` AS name,
+	tr.`name` AS region 
+FROM
+	t_realpressure trp
+	INNER JOIN t_dev td ON trp.dev_id = td.id
+	INNER JOIN t_region tr ON td.region = tr.id 
+GROUP BY
+	td.region
+
+-----查询消防炮列表------
+SELECT DISTINCT
+	* 
+FROM
+	(
+	SELECT
+		tdt.`name` AS typename,
+		td.`name` AS NAME,
+		td.site AS site,
+		td.update_time AS updateTime,
+		td.ip AS ip,
+		td.`status` AS `status`,
+		tca.isfault AS isfa,
+		tca.isfire AS isfi,
+		tca.isopen AS isopen 
+	FROM
+		t_dev td
+		INNER JOIN t_dev_type tdt ON td.type = tdt.id
+		INNER JOIN t_cannon tca ON td.id = tca.dev_id 
+	WHERE
+	1 = 1 
+	) a
+
+
+
+-----实时消防炮信息
+
+
+SELECT
+	collectdt,
+	isfire,
+	isopen,
+	isfault,
+	dev_id AS devid    
+FROM
+	t_cannon 
+WHERE
+	1 = 1 
+	AND dev_id = 8 
+ORDER BY
+	collectdt 
+	LIMIT 3
+
+
+
+
+
+
+SELECT
+	td.id AS devid,
+	td.type AS type,
+	tdt.`name` AS typename,
+	td.NAME AS NAME,
+	td.site AS site,
+	th.pressureid AS pressureid,
+	th.flowid AS flowid 
+FROM
+	t_dev td
+	INNER JOIN t_dev_type tdt ON td.type = tdt.id
+	INNER JOIN t_hydrantid_relation th ON td.id = th.hydrantid 
+WHERE
+	1 = 1 
+	AND td.type = 10
+	
+	
+	 SELECT
+    dCollectDT,tFlow,dev_id as devid
+    FROM
+    t_flow
+		WHERE
+    1 = 1
+		AND dev_id= 100
+    ORDER BY
+    dCollectDT DESC
+    LIMIT 4
+
+=================================
+SELECT
+	id,
+	cParam,
+	cValue,
+	gradeID 
+FROM
+	`t_parameter` 
+WHERE
+	1 = 1 
+	AND dev_id = 0 
+	AND cParam = 'T' 
+	AND gradeID =1
+	
+	
+	
+SELECT
+	id,
+	cParam,
+	cValue,
+	dev_id AS devid,
+	gradeID 
+FROM
+	`t_parameter` 
+WHERE
+	1 = 1 
+	AND gradeID = 1 
+	AND dev_id = 0 
+	AND cParam = 'CH4' UNION
+SELECT
+	id,
+	cParam,
+	cValue,
+	dev_id AS devid,
+	gradeID 
+FROM
+	`t_parameter` 
+WHERE
+	1 = 1 
+	AND gradeID = 2 
+	AND dev_id = 0 
+	AND cParam = 'CH4'
+	
